@@ -2,6 +2,9 @@ import { GetStaticProps } from 'next';
 
 import { getPrismicClient } from '../services/prismic';
 
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
@@ -24,13 +27,51 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home({ postsPagination }: HomeProps) {
+  console.log(
+    '🚀 ~ file: index.tsx ~ line 31 ~ Home ~ postsPagination',
+    postsPagination
+  );
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+  return (
+    <div>
+      <h1>Posts</h1>
+    </div>
+  );
+}
 
-//   // TODO
-// };
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
+
+  const postsResponse = await prismic.query('');
+
+  const posts = postsResponse.results.map((post: Post) => {
+    const newDate = format(
+      new Date(post.first_publication_date),
+      'dd/MM/yyyy',
+      {
+        locale: ptBR,
+      }
+    );
+
+    return {
+      uid: post.uid,
+      first_publication_date: newDate,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author,
+      },
+    };
+  });
+
+  return {
+    props: {
+      postsPagination: {
+        results: posts,
+        next_page: postsResponse.next_page,
+      },
+    },
+    // revalidate: 60 * 60 * 24, // 24 hours
+  };
+};

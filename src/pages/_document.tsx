@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Document, {
   Html,
   Head,
@@ -8,15 +7,11 @@ import Document, {
 } from 'next/document';
 
 class MyDocument extends Document {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
     return { ...initialProps };
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   render() {
     return (
       <Html>
