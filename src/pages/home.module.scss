@@ -1,1 +1,55 @@
-// TODO
+.container_home {
+  flex: 1;
+  max-width: 720px;
+
+  img {
+    margin-bottom: 5rem;
+  }
+
+  > strong {
+    display: block;
+    color: var(--highlight);
+    font-size: 1.8rem;
+    margin-top: 6.4rem;
+    cursor: pointer;
+    line-height: 2rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.post {
+  & + .post {
+    margin-top: 6.2rem;
+  }
+
+  strong {
+    font-size: 2.8rem;
+    line-height: 3.3rem;
+    color: var(--heading);
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.8rem;
+    margin: 8px 0 24px;
+  }
+
+  div {
+    display: flex;
+
+    span {
+      display: flex;
+      align-items: center;
+      color: var(--info);
+      font-size: 1.4rem;
+      margin-right: 24px;
+
+      svg {
+        margin-right: 8px;
+      }
+    }
+  }
+}
