@@ -3,6 +3,8 @@ import Header from '../../components/Header';
 
 import { getPrismicClient } from '../../services/prismic';
 
+import { useRouter } from 'next/router';
+
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
@@ -27,7 +29,14 @@ interface PostProps {
   post: Post;
 }
 
-export default function Post() {
+export default function Post({ post }: PostProps) {
+  console.log('🚀 ~ file: [slug].tsx ~ line 33 ~ Post ~ post', post);
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <div>
       <Header />
@@ -35,16 +44,26 @@ export default function Post() {
   );
 }
 
-// export const getStaticPaths = async () => {
-//   const prismic = getPrismicClient();
-//   const posts = await prismic.query(TODO);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const prismic = getPrismicClient();
+  const posts = await prismic.query('');
 
-//   // TODO
-// };
+  const paths = posts.results.map(post => ({
+    params: { slug: post.uid },
+  }));
 
-// export const getStaticProps = async context => {
-//   const prismic = getPrismicClient();
-//   const response = await prismic.getByUID(TODO);
+  return { paths, fallback: false };
+};
 
-//   // TODO
-// };
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const prismic = getPrismicClient();
+  const options = { lang: 'pt-br' };
+  const post = await prismic.getByUID('posts', `${params.slug}`, options);
+
+  return {
+    props: {
+      post,
+    },
+    revalidate: 60 * 60 * 24, // 24 hours
+  };
+};
