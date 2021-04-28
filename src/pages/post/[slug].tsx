@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import Header from '../../components/Header';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
@@ -33,10 +34,24 @@ interface PostProps {
 
 export default function Post({ post }: PostProps) {
   const router = useRouter();
+  const [numberOfWords, setNumberOfWords] = useState(0);
 
   if (router.isFallback) {
     return <div>Carregando...</div>;
   }
+
+  const handleCountText = () => {
+    post.data.content.map(item => {
+      item.body.map(({ text }) => {
+        const contWords = text.split(' ').length;
+        setNumberOfWords(Math.round((numberOfWords + contWords) / 200));
+      });
+    });
+  };
+
+  useEffect(() => {
+    handleCountText();
+  }, [handleCountText]);
 
   const headings =
     post.data.content.length &&
@@ -70,7 +85,8 @@ export default function Post({ post }: PostProps) {
               {post.data.author}
             </span>
             <span>
-              <FiClock size={20} />4 min
+              <FiClock size={20} />
+              {numberOfWords} min
             </span>
           </div>
 
@@ -89,7 +105,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { slug: post.uid },
   }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
