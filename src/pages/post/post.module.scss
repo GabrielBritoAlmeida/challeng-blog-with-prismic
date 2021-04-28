@@ -21,4 +21,36 @@
     line-height: 5.8rem;
     color: var(--heading);
   }
+
+  div{
+    display: flex;
+
+    span {
+      display: flex;
+      align-items: center;
+      color: var(--info);
+      font-size: 1.4rem;
+      line-height: 1.6rem;
+      margin-right: 24px;
+    }
+
+    svg {
+      margin-right: 10px;
+    }
+  }
+
+  h3 {
+    font-size: 3.8rem;
+    font-weight: 700;
+    line-height: 4.8rem;
+    color: var(--heading);
+    margin: 36px 0;
+  }
+
+  p{
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    color: var(--body);
+    margin-bottom: 2.6rem;
+  }
 }
