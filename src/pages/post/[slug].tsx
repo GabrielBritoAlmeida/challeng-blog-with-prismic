@@ -1,14 +1,14 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Header from '../../components/Header';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 import { formatDate } from 'utils/formatDate';
 
 import { getPrismicClient } from '../../services/prismic';
+import { RichText } from 'prismic-dom';
 
-import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
 interface Post {
@@ -40,14 +40,14 @@ export default function Post({ post }: PostProps) {
     return <div>Carregando...</div>;
   }
 
-  const handleCountText = () => {
+  const handleCountText = useCallback(() => {
     post.data.content.map(item => {
       item.body.map(({ text }) => {
         const contWords = text.split(' ').length;
         setNumberOfWords(Math.round((numberOfWords + contWords) / 200));
       });
     });
-  };
+  }, [numberOfWords, post.data.content]);
 
   useEffect(() => {
     handleCountText();
@@ -57,10 +57,8 @@ export default function Post({ post }: PostProps) {
     post.data.content.length &&
     post.data.content.map(item => (
       <>
-        <h3 key={item.heading}>{item.heading}</h3>
-        {item.body.map((item, index) => (
-          <p key={index}>{item.text}</p>
-        ))}
+        <h3>{item.heading}</h3>
+        <div dangerouslySetInnerHTML={{ __html: RichText.asHtml(item.body) }} />
       </>
     ));
 
