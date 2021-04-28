@@ -1,9 +1,9 @@
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
 
 import { getPrismicClient } from '../services/prismic';
 
-import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
+import { formatDate } from 'utils/formatDate';
 
 import { FiCalendar, FiUser } from 'react-icons/fi';
 
@@ -30,28 +30,35 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const allPosts = postsPagination.results.map(post => (
-    <div className={styles.post} key={post.uid}>
-      <strong>{post.data.title}</strong>
-      <p>{post.data.subtitle}</p>
-      <div>
-        <span>
-          <FiCalendar size={20} /> {post.first_publication_date}
-        </span>
-        <span>
-          <FiUser size={20} /> {post.data.author}
-        </span>
+  const allPosts =
+    postsPagination.results.length &&
+    postsPagination.results.map(post => (
+      <div className={styles.post} key={post.uid}>
+        <Link href={`/post/${post.uid}`}>
+          <a>
+            <strong>{post.data.title}</strong>
+            <p>{post.data.subtitle}</p>
+            <div>
+              <span>
+                <FiCalendar size={20} /> {post.first_publication_date}
+              </span>
+              <span>
+                <FiUser size={20} /> {post.data.author}
+              </span>
+            </div>
+          </a>
+        </Link>
       </div>
-    </div>
-  ));
+    ));
 
   return (
     <div className={commonStyles.container}>
       <div className={styles.container_home}>
         <img src="/logo.svg" alt="logo" />
+
         {allPosts}
 
-        <strong>Carregar mais posts</strong>
+        {postsPagination.next_page && <strong>Carregar mais posts</strong>}
       </div>
     </div>
   );
@@ -63,13 +70,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const postsResponse = await prismic.query('');
 
   const posts = postsResponse.results.map((post: Post) => {
-    const newDate = format(
-      new Date(post.first_publication_date),
-      'dd MMM yyyy',
-      {
-        locale: ptBR,
-      }
-    );
+    const newDate = formatDate(post.first_publication_date);
 
     return {
       uid: post.uid,

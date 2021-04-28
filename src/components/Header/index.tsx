@@ -6,8 +6,10 @@ export default function Header() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <Link href="/" passHref>
-          <img src="/logo.svg" alt="logo" />
+        <Link href="/">
+          <a>
+            <img src="/logo.svg" alt="logo" />
+          </a>
         </Link>
       </div>
     </div>

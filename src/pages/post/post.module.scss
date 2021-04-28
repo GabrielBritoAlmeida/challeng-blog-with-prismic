@@ -1,1 +1,24 @@
-// TODO
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    max-height: 400px;
+  }
+}
+
+.container_post {
+  flex: 1;
+  max-width: 720px;
+  padding: 80px 10px;
+
+  h1 {
+    font-size: 4.8rem;
+    font-weight: 700;
+    line-height: 5.8rem;
+    color: var(--heading);
+  }
+}
